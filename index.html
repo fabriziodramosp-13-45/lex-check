@@ -930,6 +930,8 @@ HTML = r"""<!doctype html>
     .rating-btn { border: 1px solid #cbd5e1; background: #f8fafc; padding: 10px; border-radius: 8px; cursor: pointer; flex: 1; text-align: center; font-size: 18px; margin: 0 4px; }
     .rating-btn:hover, .rating-btn.selected { background: #ffedd5; border-color: var(--brand); }
     
+    .feedback-suggestions-label { margin-top: 12px; font-size: 12px; display: block; font-weight: bold;}
+    
     @media (max-width: 1024px) { .top, .workspace { grid-template-columns: 1fr; } .lawyers-grid { grid-template-columns: 1fr; } }
     @media (max-width: 560px) { header { align-items: flex-start; flex-direction: column; gap: 8px; } .status-container { text-align: left; } button, .linkbtn { width: 100%; } .spij-flow { grid-template-columns: 1fr; } }
   </style>
@@ -1052,7 +1054,7 @@ https://lpderecho.pe/texto-unico-ordenado-reglamento-general-registros-publicos-
         <div class="rating-btn" onclick="selectRating(this, '¡Excelente!')">🤩</div>
       </div>
       
-      <label for="feedbackSuggestions" style="margin-top: 12px; font-size: 12px;">¿Qué cosas sugieres que podemos mejorar?</label>
+      <label for="feedbackSuggestions" class="feedback-suggestions-label">¿Qué cosas sugieres que podemos mejorar?</label>
       <textarea id="feedbackSuggestions" placeholder="Escribe aquí tus comentarios, ideas o sugerencias..." style="min-height: 80px; font-size: 13px;"></textarea>
       
       <div style="display: flex; gap: 10px; margin-top: 18px;">
@@ -1270,7 +1272,8 @@ class LexCheckHandler(BaseHTTPRequestHandler):
             self.json({"ok": True, "sources": len(load_json(SPIJ_PATH, {"sources": []}).get("sources", []))})
             return
         self.reply(404, b"No encontrado", "text/plain; charset=utf-8")
-def do_POST(self):
+
+    def do_POST(self):
         try:
             content_length = int(self.headers.get('Content-Length', 0))
             post_data = self.rfile.read(content_length)
@@ -1297,6 +1300,7 @@ def do_POST(self):
                 
         except Exception as e:
             self.reply(500, f"Error en el servidor: {str(e)}".encode('utf-8'), "text/plain")
+
     def json(self, data):
         self.reply(200, json.dumps(data, ensure_ascii=False).encode("utf-8"), "application/json; charset=utf-8")
 

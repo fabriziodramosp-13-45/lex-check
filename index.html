@@ -555,11 +555,19 @@
       }, 600);
     }
 
-    function showLoading(text) {
+function showLoading(text) {
+      // Mostramos los pasos mientras el sistema procesa
+      const flowBox = document.querySelector('.spij-flow');
+      if (flowBox) flowBox.style.display = 'grid';
+
       results.innerHTML = `<div class="finding"><h3>${escapeHtml(text)}</h3><p>Procesando la información jurídica, un momento por favor.</p></div>`;
     }
 
     function renderFindings(findings) {
+      // Ocultamos los cuadros de pasos porque ya terminó el análisis
+      const flowBox = document.querySelector('.spij-flow');
+      if (flowBox) flowBox.style.display = 'none';
+
       results.innerHTML = findings.map(item => `
         <article class="finding ${item.level}">
           <h3>${escapeHtml(item.title)} <span class="tag" style="background: var(--brand); color: white; font-weight: bold; border: none;">Riesgo ${escapeHtml(item.level)}</span></h3>
@@ -570,6 +578,10 @@
     }
 
     function renderAnswer(data) {
+      // Ocultamos los cuadros de pasos al responder una consulta
+      const flowBox = document.querySelector('.spij-flow');
+      if (flowBox) flowBox.style.display = 'none';
+
       results.innerHTML = `
         <article class="finding bajo">
           <h3>Respuesta estructurada con fuentes confiables</h3>
